@@ -1,0 +1,54 @@
+server:
+  port: 9099
+  
+spring:
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: mydb
+  application:
+    name: TOKEN-SERVICE
+  config:
+        activate:
+            on-profile: dev
+
+#eureka:
+#  instance:
+#    hostname: ${vcap.application.uris[0]:10.5.0.5}
+#    prefer-ip-address: true
+#    lease-renewal-interval-in-seconds: 10
+#    lease-expiration-duration-in-seconds: 20
+#  client:
+#    serviceUrl:
+#      defaultZone: http://10.5.0.5:8761/eureka
+
+#  zipkin:
+#    base-url: http://127.0.0.1:9411/
+    
+#logging:
+#  file.name: C:/Users/002TCO744/Desktop/elk-logs/associate-service.log
+
+#eureka:
+#  client:
+#    register-with-eureka: true
+#    fetch-registry: true
+#    service-url: 
+#      defaultZone: http://localhost:8761/eureka/
+#  instance:
+#    hostname: localhost
+   
+   
+#jpa:
+#    show-sql: true
+#    hibernate:
+#      ddl-auto: update
+#    properties:
+#      hibernate:
+#       dialect = org.hibernate.dialect.PostgreSQLDialect
+#  datasource:
+#    url: jdbc:postgresql://localhost:5432/postgres
+#    username: postgres
+#    password: admin
+#    driverClassName: org.postgresql.Driver   
+  
