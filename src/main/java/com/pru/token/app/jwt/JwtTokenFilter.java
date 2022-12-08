@@ -32,6 +32,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		if (!hasAuthorizationBearer(request)) {
+			System.out.println("Hello GIT");
 			filterChain.doFilter(request, response);
 			return;
 		}
@@ -42,6 +43,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			filterChain.doFilter(request, response);
 			return;
 		}
+		
 
 		setAuthenticationContext(token, request);
 		filterChain.doFilter(request, response);
