@@ -41,10 +41,13 @@ public class AuthenticatedUser {
 				response.setEmail(user.getEmail());
 				response.setManager(user.getManager());
 				response.setName(user.getUserName());
+				response.setFirstName(user.getFirstName());
+				response.setLastName(user.getLastName());
 				response.setReviewer(user.getReviewer());
 				response.setRole(user.getRole().getName());
 				response.setToken(accessToken);
-				response.setUserId(user.getEmployeeId());				
+				response.setUserId(user.getEmployeeId());	
+				System.out.println("response :: >"+response.toString());
 			}catch (Exception e) {
 				System.out.println("in exception "+e.getMessage());
 			}

@@ -19,7 +19,9 @@ public class RequestUser {
 	
 	private String managerEmpId;
 	
-	private String userName;
+	private String firstName;
+	
+	private String lastName;
 	
 	private String password;
 	
@@ -65,13 +67,9 @@ public class RequestUser {
 		this.managerEmpId = managerEmpId;
 	}
 
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
+//	public String getUserName() {
+//		return userName;
+//	}
 
 	public String getPassword() {
 		return password;
@@ -88,4 +86,28 @@ public class RequestUser {
 	public void setRoleId(String roleId) {
 		this.roleId = roleId;
 	}
+
+	
+	
+	
+	
+	
+	
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	
+	public String getFirstName() {
+		return firstName;
+	}
+	
+	public String getLastName() {
+		return lastName;
+	}
+
+	
 }

@@ -27,7 +27,9 @@ public class User implements UserDetails {
 	
 	private String employeeId;
 	
-	private String userName;
+	private String firstName;
+	
+	private String lastName;
 	
 	private String password;
 
@@ -139,12 +141,10 @@ public class User implements UserDetails {
 	}
 
 	public String getUserName() {
-		return userName;
+		return firstName + lastName;
 	}
+
 	
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
 
 		
 }

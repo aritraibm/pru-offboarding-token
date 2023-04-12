@@ -68,7 +68,8 @@ public class UserApi {
 		user.setManager(manager);
 		user.setPassword(passwordEncoder.encode(requestUser.getPassword()));
 		user.setReviewer(reviewer);
-		user.setUserName(requestUser.getUserName());
+		user.setFirstName(requestUser.getFirstName());
+		user.setLastName(requestUser.getLastName());
 		userRepository.save(user);
 		return ResponseEntity.ok(user);
 	}
