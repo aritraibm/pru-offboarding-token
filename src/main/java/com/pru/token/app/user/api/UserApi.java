@@ -60,6 +60,8 @@ public class UserApi {
 		Manager manager = managerRepository.findByEmpId(requestUser.getManagerEmpId());
 		Reviewer reviewer = reviewerRepository.findByEmpId(requestUser.getReviewerEmpId());
 		
+		System.out.println("fristName,lastName"+requestUser.getFirstname()+requestUser.getLastname());
+		
 		User user=new User();
 		user.setEmail(requestUser.getEmail());
 		user.setRole(rolei);
@@ -68,6 +70,8 @@ public class UserApi {
 		user.setManager(manager);
 		user.setPassword(passwordEncoder.encode(requestUser.getPassword()));
 		user.setReviewer(reviewer);
+		user.setFirstName(requestUser.getFirstname());
+		user.setLastName(requestUser.getLastname());
 		user.setUserName(requestUser.getUserName());
 		userRepository.save(user);
 		return ResponseEntity.ok(user);

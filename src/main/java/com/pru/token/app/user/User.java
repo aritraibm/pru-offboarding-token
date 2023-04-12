@@ -29,7 +29,13 @@ public class User implements UserDetails {
 	
 	private String userName;
 	
+	private String firstName;
+	
+	private String lastName;
+	
 	private String password;
+	
+	private int otp;
 
 	public String getPassword() {
 		return password;
@@ -45,6 +51,20 @@ public class User implements UserDetails {
 	
 	private Manager manager;
 	
+	public User(String email, String employeeId, String userName, String password, Role role, Reviewer reviewer,
+			Manager manager) {
+		super();
+		this.email = email;
+		this.employeeId = employeeId;
+		this.userName = userName;
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.password = password;
+		this.role = role;
+		this.reviewer = reviewer;
+		this.manager = manager;
+	}
+
 	public String getId() {
 		return id;
 	}
@@ -145,6 +165,23 @@ public class User implements UserDetails {
 	public void setUserName(String userName) {
 		this.userName = userName;
 	}
+	
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
 
 		
 }
