@@ -4,29 +4,14 @@ server:
 spring:
   data:
     mongodb:
-      uri: mongodb://localhost:27017/?readPreference=primary&ssl=false
-      database : mydb
+      host: localhost
+      port: 27017
+      database: mydb
   application:
     name: TOKEN-SERVICE
-  
-management:
-  endpoint:
-    restart:
-      enabled: true
-  endpoints:
-    web:
-      exposure:
-        include: "*"
-
-eureka:
-  instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-    prefer-ip-address: true
-    ip-address: ${IP_ADR}
-  client:
-    enabled: true
-    service-url:
-      defaultZone: ${EUREKA_SERVER_URI}/eureka
+  config:
+        activate:
+            on-profile: dev
 
 #eureka:
 #  instance:
