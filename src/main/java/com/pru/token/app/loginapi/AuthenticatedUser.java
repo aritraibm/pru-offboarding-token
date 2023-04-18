@@ -9,6 +9,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import com.pru.token.app.jwt.JwtTokenUtil;
+import com.pru.token.app.otp.EmailDetails;
+import com.pru.token.app.otp.EmailService;
+import com.pru.token.app.otp.OtpService;
+import com.pru.token.app.user.LogoutUserToken;
+import com.pru.token.app.user.LogoutUserTokenRepository;
 import com.pru.token.app.user.User;
 import com.pru.token.app.user.UserRepository;
 
@@ -23,6 +28,15 @@ public class AuthenticatedUser {
 	
 	@Autowired
 	private UserRepository repository;
+	
+	@Autowired
+	private LogoutUserTokenRepository logoutUserRepo;
+	
+	@Autowired
+	private EmailService esm;
+	
+	@Autowired
+	private OtpService otps;
 
 	public LoginUserResponse getUser(LoginUserRequest req) {
 		Optional<User> optional=repository.findByEmployeeId(req.getEmpId());
@@ -43,8 +57,28 @@ public class AuthenticatedUser {
 				response.setName(user.getUserName());
 				response.setReviewer(user.getReviewer());
 				response.setRole(user.getRole().getName());
-				response.setToken(accessToken);
-				response.setUserId(user.getEmployeeId());				
+				response.setUserId(user.getEmployeeId());		
+				LogoutUserToken logoutUserToken = null;
+				if(!logoutUserRepo.findByEmpId(user.getEmployeeId()).isPresent()) {
+					logoutUserToken = new LogoutUserToken();
+					
+				}else if(logoutUserRepo.findByEmpId(user.getEmployeeId()).isPresent()){
+					logoutUserToken = logoutUserRepo.findByEmpId(user.getEmployeeId()).get();
+				}
+				logoutUserToken.setLogout(false);
+				logoutUserToken.setToken(accessToken);
+				logoutUserToken.setEmpId(user.getEmployeeId());
+				LogoutUserToken out= logoutUserRepo.save(logoutUserToken);
+				System.out.println("in out : "+out.getToken()+" , isout "+out.isLogout()+" , tid "+out.getTId());
+				
+				EmailDetails ed=new EmailDetails();
+				int otp = (int)Math.round(Math.random()*100000);
+				ed.setRecipient(user.getEmail());
+				ed.setSubject("OTP Generated for Onboardig application");
+				ed.setMsgBody("Verify OTP : "+otp);
+				esm.sendMail(ed);
+				otps.updateOtp(user.getEmployeeId(), otp);
+				
 			}catch (Exception e) {
 				System.out.println("in exception "+e.getMessage());
 			}

@@ -21,9 +21,25 @@ public class RequestUser {
 	
 	private String userName;
 	
+	private String firstName;
+	
+	private String lastName;
+	
 	private String password;
 	
 	private String roleId;
+	
+	public RequestUser(String email, String employeeId, String reviewerEmpId, String managerEmpId, String userName,
+			String password, String roleId) {
+		super();
+		this.email = email;
+		this.employeeId = employeeId;
+		this.reviewerEmpId = reviewerEmpId;
+		this.managerEmpId = managerEmpId;
+		this.userName = userName;
+		this.password = password;
+		this.roleId = roleId;
+	}
 
 	public String getId() {
 		return id;
@@ -87,5 +103,40 @@ public class RequestUser {
 
 	public void setRoleId(String roleId) {
 		this.roleId = roleId;
+		
 	}
+	
+	public RequestUser(String firstName, String lastName) {
+		super();
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getLastname() {
+		// TODO Auto-generated method stub
+		return lastName;
+	}
+
+	public String getFirstname() {
+		// TODO Auto-generated method stub
+		return firstName;
+	}
+
+	
 }

@@ -18,6 +18,11 @@ public class Reviewer {
 	
 	private String reviewerName;
 
+	public Reviewer(String reviewerName) {
+		super();
+		this.reviewerName = reviewerName;
+	}
+
 	public String getEmpId() {
 		return empId;
 	}
