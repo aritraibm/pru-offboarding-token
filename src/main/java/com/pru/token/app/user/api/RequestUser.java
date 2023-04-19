@@ -10,22 +10,36 @@ import lombok.NoArgsConstructor;
 public class RequestUser {
 
 	private String id;
-	
+
 	private String email;
-	
+
 	private String employeeId;
-	
+
 	private String reviewerEmpId;
-	
+
 	private String managerEmpId;
-	
+
 	private String firstName;
-	
+
 	private String lastName;
-	
+
+	private String userName;
+
 	private String password;
-	
+
 	private String roleId;
+
+	public RequestUser(String email, String employeeId, String reviewerEmpId, String managerEmpId, String userName,
+			String password, String roleId) {
+		super();
+		this.email = email;
+		this.employeeId = employeeId;
+		this.reviewerEmpId = reviewerEmpId;
+		this.managerEmpId = managerEmpId;
+		this.userName = userName;
+		this.password = password;
+		this.roleId = roleId;
+	}
 
 	public String getId() {
 		return id;
@@ -67,9 +81,9 @@ public class RequestUser {
 		this.managerEmpId = managerEmpId;
 	}
 
-//	public String getUserName() {
-//		return userName;
-//	}
+	// public String getUserName() {
+	// return userName;
+	// }
 
 	public String getPassword() {
 		return password;
@@ -85,29 +99,39 @@ public class RequestUser {
 
 	public void setRoleId(String roleId) {
 		this.roleId = roleId;
+
 	}
 
-	
-	
-	
-	
-	
-	
-	public void setFirstName(String firstName) {
+	public RequestUser(String firstName, String lastName) {
+		super();
 		this.firstName = firstName;
-	}
-	
-	public void setLastName(String lastName) {
 		this.lastName = lastName;
 	}
-	
+
 	public String getFirstName() {
 		return firstName;
 	}
-	
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
 	public String getLastName() {
 		return lastName;
 	}
 
-	
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public String getLastname() {
+		// TODO Auto-generated method stub
+		return lastName;
+	}
+
+	public String getFirstname() {
+		// TODO Auto-generated method stub
+		return firstName;
+	}
+
 }

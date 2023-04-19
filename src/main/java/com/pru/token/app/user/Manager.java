@@ -18,6 +18,11 @@ public class Manager {
 	
 	private String managerName;
 
+	public Manager(String managerName) {
+		super();
+		this.managerName = managerName;
+	}
+
 	public String getEmpId() {
 		return empId;
 	}

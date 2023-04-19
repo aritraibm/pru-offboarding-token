@@ -26,41 +26,43 @@ import com.pru.token.app.user.UserRepository;
 @RestController
 public class UserApi {
 
-	@Autowired 
+	@Autowired
 	private UserService service;
-	
+
 	@Autowired
 	private UserRepository userRepository;
-	
+
 	@Autowired
 	private RoleRepository roleRepository;
-	
+
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
 	private ManagerRepository managerRepository;
-	
+
 	@Autowired
 	private ReviewerRepository reviewerRepository;
-	
+
 	@PutMapping("/users")
 	public ResponseEntity<?> createUser(@RequestBody @Valid User user) {
 		User createdUser = service.save(user);
 		URI uri = URI.create("/users/" + createdUser.getId());
-		
+
 		UserDTO userDto = new UserDTO(createdUser.getId(), createdUser.getEmail());
-		
+
 		return ResponseEntity.created(uri).body(userDto);
 	}
-	
+
 	@PostMapping("/user_add")
-	public ResponseEntity<?> addUser(@RequestBody RequestUser requestUser){
+	public ResponseEntity<?> addUser(@RequestBody RequestUser requestUser) {
 		Role rolei = roleRepository.findById(requestUser.getRoleId()).get();
 		Manager manager = managerRepository.findByEmpId(requestUser.getManagerEmpId());
 		Reviewer reviewer = reviewerRepository.findByEmpId(requestUser.getReviewerEmpId());
-		
-		User user=new User();
+
+		System.out.println("fristName,lastName" + requestUser.getFirstname() + requestUser.getLastname());
+
+		User user = new User();
 		user.setEmail(requestUser.getEmail());
 		user.setRole(rolei);
 		user.setEmployeeId(requestUser.getEmployeeId());
@@ -68,47 +70,48 @@ public class UserApi {
 		user.setManager(manager);
 		user.setPassword(passwordEncoder.encode(requestUser.getPassword()));
 		user.setReviewer(reviewer);
-		user.setFirstName(requestUser.getFirstName());
-		user.setLastName(requestUser.getLastName());
+		user.setFirstName(requestUser.getFirstname());
+		user.setLastName(requestUser.getLastname());
+		user.setUserName(requestUser.getUserName());
 		userRepository.save(user);
 		return ResponseEntity.ok(user);
 	}
-	
+
 	@PostMapping("/manager_add")
-	public ResponseEntity<?> createManager(@RequestBody Manager manager){
+	public ResponseEntity<?> createManager(@RequestBody Manager manager) {
 		managerRepository.save(manager);
 		return ResponseEntity.ok(manager);
 	}
-	
+
 	@PostMapping("/reviewer_add")
-	public ResponseEntity<?> createManager(@RequestBody Reviewer reviewer){
+	public ResponseEntity<?> createManager(@RequestBody Reviewer reviewer) {
 		reviewerRepository.save(reviewer);
 		return ResponseEntity.ok(reviewer);
 	}
-	
+
 	@PostMapping("/role_add")
-	public ResponseEntity<?> createRole(@RequestBody Role role){
+	public ResponseEntity<?> createRole(@RequestBody Role role) {
 		roleRepository.save(role);
 		return ResponseEntity.ok(role);
 	}
-	
+
 	@GetMapping("/roles")
-	public List<Role> getRoles(){
+	public List<Role> getRoles() {
 		return roleRepository.findAll();
 	}
-	
+
 	@GetMapping("/managers")
-	public List<Manager> getManagers(){
+	public List<Manager> getManagers() {
 		return managerRepository.findAll();
 	}
-	
+
 	@GetMapping("/reviewers")
-	public List<Reviewer> getReviewers(){
+	public List<Reviewer> getReviewers() {
 		return reviewerRepository.findAll();
 	}
-	
+
 	@GetMapping("/users_get")
-	public List<User> getUsers(){
+	public List<User> getUsers() {
 		return userRepository.findAll();
 	}
 }

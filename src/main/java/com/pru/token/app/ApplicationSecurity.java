@@ -26,6 +26,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 	@Autowired private UserRepository userRepo;
 	
 	@Autowired private JwtTokenFilter jwtTokenFilter;
+	
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -44,7 +45,7 @@ public class ApplicationSecurity extends WebSecurityConfigurerAdapter {
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		
 		http.authorizeRequests()
-				.antMatchers("/auth/login", "/docs/**", "/users", "/users_get","/manager_add","/reviewer_add", "/user_add","/role_add","/roles","/assign_role","/managers","/reviewers", "/token/**", "/loginuser/**").permitAll()
+				.antMatchers("/auth/login","/actuator/**", "/docs/**", "/users", "/users_get","/manager_add","/reviewer_add", "/user_add","/role_add","/roles","/assign_role","/managers","/reviewers", "/token/**", "/loginuser/**", "/logout/**").permitAll()
 				.anyRequest().authenticated();
 		
         http.exceptionHandling()

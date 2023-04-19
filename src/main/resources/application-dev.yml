@@ -4,24 +4,33 @@ server:
 spring:
   data:
     mongodb:
-      host: localhost
-      port: 27017
-      database: mydb
+      uri: mongodb://localhost:27017/?readPreference=primary&ssl=false
+      database : mydb
   application:
     name: TOKEN-SERVICE
+
   config:
         activate:
             on-profile: dev
+            
+management:
+  endpoint:
+    restart:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
 
-#eureka:
-#  instance:
-#    hostname: ${vcap.application.uris[0]:10.5.0.5}
-#    prefer-ip-address: true
-#    lease-renewal-interval-in-seconds: 10
-#    lease-expiration-duration-in-seconds: 20
-#  client:
-#    serviceUrl:
-#      defaultZone: http://10.5.0.5:8761/eureka
+eureka:
+  instance:
+    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
+    ip-address: ${IP_ADR}
+  client:
+    enabled: true
+    service-url:
+      defaultZone: ${EUREKA_SERVER_URI}/eureka
 
 #  zipkin:
 #    base-url: http://127.0.0.1:9411/
