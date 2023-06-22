@@ -1,6 +1,7 @@
 package com.pru.token.app.user;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -14,28 +15,22 @@ import lombok.NoArgsConstructor;
 public class Reviewer {
 	
 	@Id
-	private String empId;
+	private String id;
 	
-	private String reviewerName;
+	private String firstName;
+	private String lastName;
+	@Indexed(unique = true)
+	private String email;
+	@Indexed(unique = true)
+	private String employeeId;
 
-	public Reviewer(String reviewerName) {
-		super();
-		this.reviewerName = reviewerName;
-	}
+	private String managerEmpId;
 
-	public String getEmpId() {
-		return empId;
-	}
-
-	public void setEmpId(String empId) {
-		this.empId = empId;
-	}
-
-	public String getReviewerName() {
-		return reviewerName;
-	}
-
-	public void setReviewerName(String reviewerName) {
-		this.reviewerName = reviewerName;
+	public Reviewer(String firstName, String lastName, String email, String employeeId, String managerEmpId) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+		this.email = email;
+		this.employeeId = employeeId;
+		this.managerEmpId = managerEmpId;
 	}
 }

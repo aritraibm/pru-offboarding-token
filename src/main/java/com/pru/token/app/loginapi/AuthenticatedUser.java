@@ -2,10 +2,13 @@ package com.pru.token.app.loginapi;
 
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.pru.token.app.jwt.JwtTokenUtil;
@@ -38,13 +41,12 @@ public class AuthenticatedUser {
 	@Autowired
 	private OtpService otps;
 
-	public LoginUserResponse getUser(LoginUserRequest req) {
+	public LoginUserResponse getUser(LoginUserRequest req) throws MessagingException {
 		Optional<User> optional = repository.findByEmployeeId(req.getEmpId());
 		LoginUserResponse response = new LoginUserResponse();
 		if (optional.isPresent()) {
 			User request = optional.get();
 			System.out.println("User " + optional.get());
-			try {
 				Authentication authentication = authManager.authenticate(
 						new UsernamePasswordAuthenticationToken(
 								request.getEmail(), req.getPassword()));
@@ -66,6 +68,7 @@ public class AuthenticatedUser {
 				} else if (logoutUserRepo.findByEmpId(user.getEmployeeId()).isPresent()) {
 					logoutUserToken = logoutUserRepo.findByEmpId(user.getEmployeeId()).get();
 				}
+				assert logoutUserToken != null;
 				logoutUserToken.setLogout(false);
 				logoutUserToken.setToken(accessToken);
 				logoutUserToken.setEmpId(user.getEmployeeId());
@@ -78,16 +81,15 @@ public class AuthenticatedUser {
 				ed.setRecipient(user.getEmail());
 				ed.setSubject("OTP Generated for Onboardig application");
 				ed.setMsgBody("Verify OTP : " + otp);
-				esm.sendMail(ed);
+				String as= esm.sendMail(ed);
+				System.out.println("aft snt "+as);
 				otps.updateOtp(user.getEmployeeId(), otp);
 
-			} catch (Exception e) {
-				System.out.println("in exception " + e.getMessage());
+			}else {
+				throw new UsernameNotFoundException(req.getEmpId()+" user not found");
 			}
-		} else {
-			System.out.println("user not tere " + req.getEmpId());
+			return response;
 		}
-		return response;
-	}
 
-}
+		
+	}

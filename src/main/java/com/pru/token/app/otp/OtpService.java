@@ -5,6 +5,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pru.token.app.exception.AppTokenException;
+import com.pru.token.app.exception.OTPException;
 import com.pru.token.app.user.LogoutUserToken;
 import com.pru.token.app.user.LogoutUserTokenRepository;
 import com.pru.token.app.user.User;
@@ -29,13 +31,14 @@ public class OtpService {
 				return lut.getToken();
 			}else {
 				System.out.println("Otp is not matching.....");
-				lut.setLogout(true);
-				logoutUserRepo.save(lut);
-				return "Otp is not matching.....";
+//				lut.setLogout(true);
+//				logoutUserRepo.save(lut);
+				throw new OTPException("OTP not matching.");
+//				return "Otp is not matching.....";
 			}
+		}else {
+			throw new AppTokenException("User and token not present.");
 		}
-		
-		return null;
 	}
 	
 	public void updateOtp(String empid,int otp) {

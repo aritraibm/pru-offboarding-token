@@ -1,11 +1,35 @@
 server:
   port: 9099
   
+  
 spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: manideepsiripalli78@gmail.com
+    password: ecienilcgekmhabt
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            trust: smtp.gmail.com
+          starttls:
+            enable: true  
+  
+
   data:
     mongodb:
-      uri: mongodb://localhost:27017/?readPreference=primary&ssl=false
-      database : mydb
+        uri: mongodb://localhost:27017/?readPreference=primary&ssl=false
+        database : mydb
+    
+#      uri: mongodb://Manideep1:Manideep1@docdb-2023-05-29-07-06-57.czzwddiesvbx.ap-south-1.docdb.amazonaws.com:27017/?ssl=true&ssl_ca_certs=ap-south-1-bundle.pem&retryWrites=false
+#      database : mydb
+#      ssl:
+#        enabled: true
+#        invalidHostNameAllowed: true
+#        trust-store: /rds-truststore.jks
+#        trust-store-password: mnbvcxz
   application:
     name: TOKEN-SERVICE
 
@@ -22,15 +46,15 @@ management:
       exposure:
         include: "*"
 
-eureka:
-  instance:
-    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
-    prefer-ip-address: true
-    ip-address: ${IP_ADR}
-  client:
-    enabled: true
-    service-url:
-      defaultZone: ${EUREKA_SERVER_URI}/eureka
+#eureka:
+#  instance:
+#    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+#    prefer-ip-address: true
+#    ip-address: ${IP_ADR}
+#  client:
+#    enabled: true
+#    service-url:
+#      defaultZone: ${EUREKA_SERVER_URI}/eureka
 
 #  zipkin:
 #    base-url: http://127.0.0.1:9411/
@@ -46,6 +70,15 @@ eureka:
 #      defaultZone: http://localhost:8761/eureka/
 #  instance:
 #    hostname: localhost
+
+eureka:
+  instance:
+    instance-id: ${spring.application.name}
+    prefer-ip-address: false
+  client:
+    enabled: true
+    service-url:
+      defaultZone: http://localhost:8761/eureka
    
    
 #jpa:

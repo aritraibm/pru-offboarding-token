@@ -1,39 +1,62 @@
 //package com.pru.token.app;
 //
-//import org.springframework.boot.autoconfigure.mongo.MongoProperties;
-//import org.springframework.boot.autoconfigure.mongo.MongoPropertiesClientSettingsBuilderCustomizer;
+//import java.io.InputStream;
+//import java.security.KeyStore;
+//
+//import javax.net.ssl.SSLContext;
+//import javax.net.ssl.TrustManagerFactory;
+//
+//import org.springframework.beans.factory.annotation.Value;
 //import org.springframework.context.annotation.Bean;
 //import org.springframework.context.annotation.Configuration;
-//import org.springframework.core.env.Environment;
+//import org.springframework.context.annotation.Profile;
 //
+//import com.mongodb.ConnectionString;
 //import com.mongodb.MongoClientSettings;
+//import com.mongodb.client.MongoClient;
+//import com.mongodb.client.MongoClients;
+//import com.mongodb.connection.SslSettings;
 //
+//@Profile("dev")
 //@Configuration
 //public class DocumentDBConf {
 //	
-//	
-//	public static final String KEY_STORE_TYPE = "/tmp/certs/rds-truststore.jks";
-//    public static final String DEFAULT_KEY_STORE_PASSWORD = "mnbvcxz";
+//	@Value("${spring.data.mongodb.uri}")
+//    private String mongoUri;
 //
+//    @Value("${spring.data.mongodb.ssl.enabled}")
+//    private boolean sslEnabled;
 //
-//        @Bean
-//        public MongoClientSettings mongoClientSettings() {
-//        	System.out.println("mongo clint setting called");
-//             setSslProperties();
-//	     return MongoClientSettings.builder()
-//                    .applyToSslSettings(builder -> builder.enabled(true))
+//    @Value("${spring.data.mongodb.ssl.trust-store}")
+//    private String trustStore;
+//
+//    @Value("${spring.data.mongodb.ssl.trust-store-password}")
+//    private String trustStorePassword;
+//
+//    @Bean
+//    public MongoClient mongoClient() throws Exception {
+//        ConnectionString connectionString = new ConnectionString(mongoUri);
+//        MongoClientSettings.Builder builder = MongoClientSettings.builder()
+//                .applyConnectionString(connectionString);
+//        if (sslEnabled) {
+//            
+//            SSLContext sslContext = SSLContext.getInstance("TLS");
+//            KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
+//            try (InputStream is = getClass().getClassLoader().getResourceAsStream(this.trustStore)) {
+//                trustStore.load(is, this.trustStorePassword.toCharArray());
+//            }
+//            TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+//            tmf.init(trustStore);
+//            sslContext.init(null, tmf.getTrustManagers(), null);
+//            SslSettings sslSettings = SslSettings.builder()
+//            		.context(sslContext)
+//                    .enabled(true)
 //                    .build();
+//            builder.applyToSslSettings(builderq -> builderq.applySettings(sslSettings));
+//            
 //        }
+//        MongoClientSettings mongoClientSettings = builder.build();
+//        return MongoClients.create(mongoClientSettings);
+//    }
 //
-//        private static void setSslProperties() {
-//    	      System.setProperty("javax.net.ssl.trustStore", KEY_STORE_TYPE);
-//    	      System.setProperty("javax.net.ssl.trustStorePassword",           
-//                    DEFAULT_KEY_STORE_PASSWORD);
-//        }
-//        
-//        @Bean
-//        public MongoPropertiesClientSettingsBuilderCustomizer mongoPropertiesCustomizer(final MongoProperties properties,final Environment environment) {
-//			System.out.println("mongo mpcsbc");
-//        	return new MongoPropertiesClientSettingsBuilderCustomizer(properties,environment);
-//        }
 //}

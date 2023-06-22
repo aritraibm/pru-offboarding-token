@@ -34,6 +34,8 @@ public class User implements UserDetails {
 	private String userName;
 	
 	private String password;
+	
+	private String name;
 
 	private int otp;
 
@@ -59,6 +61,7 @@ public class User implements UserDetails {
 		this.userName = userName;
 		this.firstName = firstName;
 		this.lastName = lastName;
+		this.name = name;
 		this.password = password;
 		this.role = role;
 		this.reviewer = reviewer;
@@ -181,6 +184,14 @@ public class User implements UserDetails {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
