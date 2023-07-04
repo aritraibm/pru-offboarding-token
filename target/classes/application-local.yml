@@ -1,0 +1,25 @@
+server:
+  port: 9099
+
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: manideepsiripalli78@gmail.com
+    password: ecienilcgekmhabt
+    properties:
+      mail:
+        smtp:
+          auth: true
+          ssl:
+            trust: smtp.gmail.com
+          starttls:
+            enable: true
+  data:
+    mongodb:
+      uri: mongodb://${IPDB}:27017/offboardstore
+      database : offboardstore
+  application:
+    name: TOKEN-SERVICE
+  config:
+    import: optional:configserver:http://${CNF}:9296/
