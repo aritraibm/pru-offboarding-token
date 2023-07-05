@@ -1,11 +1,14 @@
 package com.pru.token.app.user.api;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -56,22 +59,49 @@ public class UserApi {
 	
 	@PostMapping("/user_add")
 	public ResponseEntity<?> addUser(@RequestBody RequestUser requestUser){
-		Role rolei = roleRepository.findById(requestUser.getRoleId()).get();
-		Manager manager = managerRepository.findByEmpId(requestUser.getManagerEmpId());
-		Reviewer reviewer = reviewerRepository.findByEmpId(requestUser.getReviewerEmpId());
 		
-		User user=new User();
-		user.setEmail(requestUser.getEmail());
-		user.setRole(rolei);
-		user.setEmployeeId(requestUser.getEmployeeId());
-		user.setId(requestUser.getId());
-		user.setManager(manager);
-		user.setPassword(passwordEncoder.encode(requestUser.getPassword()));
-		user.setReviewer(reviewer);
-		user.setFirstName(requestUser.getFirstName());
-		user.setLastName(requestUser.getLastName());
-		userRepository.save(user);
-		return ResponseEntity.ok(user);
+		Optional<User> existingUser= userRepository.findByEmployeeId(requestUser.getEmployeeId());
+		//System.out.println("existingUser >>> "+requestUser.getEmployeeId()+" :: "+existingUser.toString());
+		if(!existingUser.isEmpty()) {
+			System.out.println("existingUser IF >>> "+requestUser.getEmployeeId()+" :: "+existingUser.toString());
+//			HttpHeaders responseHeaders = new HttpHeaders();
+//		   responseHeaders.setLocation(location);
+//		   responseHeaders.set("MyResponseHeader", "MyValue");
+			HashMap mp1= new HashMap<String, Object>();
+			mp1.put("transactionStatus", "Error");
+			mp1.put("errorCode", "232323");
+			mp1.put("errorMsg", "Employee Id already Exist!");
+			
+			
+			return new ResponseEntity<HashMap<String, String>>(mp1, null, HttpStatus.ACCEPTED);
+		}else {
+			
+			
+			Role rolei = roleRepository.findById(requestUser.getRoleId()).get();
+			Manager manager = managerRepository.findByEmpId(requestUser.getManagerEmpId());
+			Reviewer reviewer = reviewerRepository.findByEmpId(requestUser.getReviewerEmpId());
+			
+			User user=new User();
+			user.setEmail(requestUser.getEmail());
+			user.setRole(rolei);
+			user.setEmployeeId(requestUser.getEmployeeId());
+			user.setId(requestUser.getId());
+			user.setManager(manager);
+			user.setPassword(passwordEncoder.encode(requestUser.getPassword()));
+			user.setReviewer(reviewer);
+			user.setFirstName(requestUser.getFirstName());
+			user.setLastName(requestUser.getLastName());
+			userRepository.save(user);
+			
+			
+			HashMap mp1= new HashMap<String, Object>();
+			mp1.put("transactionStatus", "Success");
+			mp1.put("errorCode", "");
+			mp1.put("errorMsg", "");
+			mp1.put("transactionData", user);
+			return ResponseEntity.ok(mp1);
+		}
+		
 	}
 	
 	@PostMapping("/manager_add")
