@@ -25,14 +25,14 @@ public class LogoutUtil {
 		return false;
 	}
 	
-	public LogoutUserToken getUsrLogout(String token) {
-		Optional<LogoutUserToken> opl = lg.findByToken(token);
-		if(opl.isPresent()) {
-			System.out.println("opl "+opl.get());
-			return opl.get();
-		}
-		System.out.println("not prsnt ");
-		return null;
-	}
+//	public LogoutUserToken getUsrLogout(String token) {
+//		Optional<LogoutUserToken> opl = lg.findByToken(token);
+//		if(opl.isPresent()) {
+//			System.out.println("opl "+opl.get());
+//			return opl.get();
+//		}
+//		System.out.println("not prsnt ");
+//		return null;
+//	}
 
 }

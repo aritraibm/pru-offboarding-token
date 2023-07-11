@@ -1,11 +1,10 @@
 package com.pru.token.app.jwt;
 
+import com.pru.token.app.user.Role;
+import com.pru.token.app.user.User;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import java.io.IOException;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -16,10 +15,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.pru.token.app.user.Role;
-import com.pru.token.app.user.User;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import io.jsonwebtoken.Claims;
 
 @Component
 public class JwtTokenFilter extends OncePerRequestFilter {
@@ -32,18 +32,11 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 			throws ServletException, IOException {
 
 		if (!hasAuthorizationBearer(request)) {
-			System.out.println("Hello GIT");
 			filterChain.doFilter(request, response);
 			return;
 		}
 
 		String token = getAccessToken(request);
-
-		if (!jwtUtil.validateAccessToken(token)) {
-			filterChain.doFilter(request, response);
-			return;
-		}
-		
 
 		setAuthenticationContext(token, request);
 		filterChain.doFilter(request, response);
@@ -51,17 +44,12 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 	private boolean hasAuthorizationBearer(HttpServletRequest request) {
 		String header = request.getHeader("Authorization");
-		if (ObjectUtils.isEmpty(header) || !header.startsWith("Bearer")) {
-			return false;
-		}
-
-		return true;
+		return !ObjectUtils.isEmpty(header) && header.startsWith("Bearer");
 	}
 
 	private String getAccessToken(HttpServletRequest request) {
 		String header = request.getHeader("Authorization");
-		String token = header.split(" ")[1].trim();
-		return token;
+		return header.split(" ")[1].trim();
 	}
 
 	private void setAuthenticationContext(String token, HttpServletRequest request) {
@@ -78,7 +66,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
 	private UserDetails getUserDetails(String token) {
 		User userDetails = new User();
-		Claims claims = jwtUtil.parseClaims(token);
+		Claims claims = Jwts.parserBuilder().setSigningKey(jwtUtil.getSignKey()).build().parseClaimsJws(token).getBody();
 		String subject = (String) claims.get(Claims.SUBJECT);
 		String roles = (String) claims.get("roles");
 		

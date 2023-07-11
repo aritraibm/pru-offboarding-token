@@ -56,8 +56,9 @@ public class AuthenticatedUser {
 				response.setEmail(user.getEmail());
 				response.setManager(user.getManager());
 				response.setName(user.getUserName());
-				response.setFirstName(user.getFirstName());
-				response.setLastName(user.getLastName());
+//				response.setFirstName(user.getFirstName());
+//				response.setLastName(user.getLastName());
+				
 				response.setReviewer(user.getReviewer());
 				response.setRole(user.getRole().getName());
 				response.setUserId(user.getEmployeeId());
@@ -79,7 +80,7 @@ public class AuthenticatedUser {
 				EmailDetails ed = new EmailDetails();
 				int otp = (int) Math.round(Math.random() * 100000);
 				ed.setRecipient(user.getEmail());
-				ed.setSubject("OTP Generated for Onboardig application");
+				ed.setSubject("OTP Generated for Offboardig application");
 				ed.setMsgBody("Verify OTP : " + otp);
 				String as= esm.sendMail(ed);
 				System.out.println("aft snt "+as);

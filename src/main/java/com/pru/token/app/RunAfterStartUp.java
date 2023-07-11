@@ -32,8 +32,8 @@ public class RunAfterStartUp {
 		if (roleRepository.findAll().size() < 1) {
 			roleRepository.deleteAll();
 			roleRepository.save(new Role("ROLE_ASSOCIATE"));
-			roleRepository.save(new Role("ROLE_ONBOARDING_REVIEWER"));
-			roleRepository.save(new Role("ROLE_ONBOARDING_MANAGER"));
+			roleRepository.save(new Role("ROLE_OFFBOARDING_REVIEWER"));
+			roleRepository.save(new Role("ROLE_OFFBOARDING_MANAGER"));
 			System.out.println("Roles created........");
 		}
 		if (managerRepository.findAll().size() < 1) {
@@ -41,7 +41,7 @@ public class RunAfterStartUp {
 			managerRepository.save(new Manager("Waseem","Hasan","manager1@abc.com","112233"));
 			managerRepository.save(new Manager("N","A","non@ibm.com","000IBM"));
 			System.out.println("Managers created........");
-			Role role = roleRepository.findByName("ROLE_ONBOARDING_MANAGER");
+			Role role = roleRepository.findByName("ROLE_OFFBOARDING_MANAGER");
 			managerRepository.findAll().forEach(m->{
 				RequestUser requestUserManager = new RequestUser(m.getEmail(), m.getEmployeeId(), null, null,
 						m.getFirstName(),m.getLastName(), m.getEmployeeId(), role.getId());

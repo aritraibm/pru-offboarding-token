@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
         if (role.getName().equals("ROLE_ASSOCIATE")){
             user.setReviewer(reviewerService.getReviewerByEmpId(requestUser.getReviewerEmpId()));
             user.setManager(managerService.getManagerByEmpId(requestUser.getManagerEmpId()));
-        } else if (role.getName().equals("ROLE_ONBOARDING_REVIEWER")) {
+        } else if (role.getName().equals("ROLE_OFFBOARDING_REVIEWER")) {
             user.setManager(managerService.getManagerByEmpId(requestUser.getManagerEmpId()));
         }
 //        user.setName(requestUser.getFirstName()+" "+requestUser.getLastName());

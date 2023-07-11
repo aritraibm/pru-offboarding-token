@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pru.token.app.otp.OtpService;
+import com.pru.token.app.user.LogoutUserTokenRepository;
 
 @CrossOrigin
 @RestController
@@ -25,6 +26,10 @@ public class LoginApi {
 		
 	@Autowired
 	private OtpService otps;
+	
+	@Autowired
+	private LogoutUserTokenRepository logoutUserRepo;
+
 
 	@PostMapping("/user")
 	public ResponseEntity<?> getUser(@RequestBody LoginUserRequest request) throws MessagingException{
@@ -35,9 +40,10 @@ public class LoginApi {
 		
 	@GetMapping("/user")
 	public ResponseEntity<?> otpMatch(@RequestHeader(value="empId") String empId,
-			  @RequestHeader(value="password") String password) throws MessagingException {
-		System.out.println(empId+" emp otp "+password);
-		String token = otps.otpVerifyToken(empId,Integer.parseInt(password));	
-		return ResponseEntity.ok().body("Otp is success : "+token);
+									  @RequestHeader(value="password") String password) throws MessagingException {
+			System.out.println(empId+" emp otp "+password);
+			String token = otps.otpVerifyToken(empId,Integer.parseInt(password));
+			return ResponseEntity.ok().body(token);
 	}
+
 }
