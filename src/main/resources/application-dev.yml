@@ -13,6 +13,25 @@ spring:
         activate:
             on-profile: dev
 
+management:
+  endpoint:
+    restart:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+#eureka:
+#  instance:
+#    instance-id: ${spring.application.name}:${spring.application.instance_id:${random.value}}
+#    prefer-ip-address: true
+#    ip-address: http://localhost:8761/
+#  client:
+#    enabled: true
+#    service-url:
+#      defaultZone: http://localhost:8761/eureka/
+
 #eureka:
 #  instance:
 #    hostname: ${vcap.application.uris[0]:10.5.0.5}

@@ -1,36 +1,23 @@
 package com.pru.token.app.user.api;
 
-import java.net.URI;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-
-import javax.validation.Valid;
-
+import com.pru.token.app.user.*;
+import com.pru.token.app.user.service.ManagerService;
+import com.pru.token.app.user.service.ReviewerService;
+import com.pru.token.app.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import com.pru.token.app.user.Manager;
-import com.pru.token.app.user.ManagerRepository;
-import com.pru.token.app.user.Reviewer;
-import com.pru.token.app.user.ReviewerRepository;
-import com.pru.token.app.user.Role;
-import com.pru.token.app.user.RoleRepository;
-import com.pru.token.app.user.User;
-import com.pru.token.app.user.UserRepository;
+import java.util.List;
 
-@RestController
+@RestController()
+@RequestMapping("/user")
 public class UserApi {
 
 	@Autowired 
-	private UserService service;
+	private UserService userService;
 	
 	@Autowired
 	private UserRepository userRepository;
@@ -40,103 +27,60 @@ public class UserApi {
 	
 	@Autowired
 	private PasswordEncoder passwordEncoder;
-	
+
 	@Autowired
-	private ManagerRepository managerRepository;
-	
+	private ManagerService managerService;
+
 	@Autowired
-	private ReviewerRepository reviewerRepository;
-	
-	@PutMapping("/users")
-	public ResponseEntity<?> createUser(@RequestBody @Valid User user) {
-		User createdUser = service.save(user);
-		URI uri = URI.create("/users/" + createdUser.getId());
-		
-		UserDTO userDto = new UserDTO(createdUser.getId(), createdUser.getEmail());
-		
-		return ResponseEntity.created(uri).body(userDto);
-	}
-	
+	private ReviewerService reviewerService;
+
+	@PreAuthorize("hasAnyRole({'ROLE_OFFBOARDING_REVIEWER','ROLE_OFFBOARDING_MANAGER'})")
 	@PostMapping("/user_add")
 	public ResponseEntity<?> addUser(@RequestBody RequestUser requestUser){
-		
-		Optional<User> existingUser= userRepository.findByEmployeeId(requestUser.getEmployeeId());
-		//System.out.println("existingUser >>> "+requestUser.getEmployeeId()+" :: "+existingUser.toString());
-		if(!existingUser.isEmpty()) {
-			System.out.println("existingUser IF >>> "+requestUser.getEmployeeId()+" :: "+existingUser.toString());
-//			HttpHeaders responseHeaders = new HttpHeaders();
-//		   responseHeaders.setLocation(location);
-//		   responseHeaders.set("MyResponseHeader", "MyValue");
-			HashMap mp1= new HashMap<String, Object>();
-			mp1.put("transactionStatus", "Error");
-			mp1.put("errorCode", "232323");
-			mp1.put("errorMsg", "Employee Id already Exist!");
-			
-			
-			return new ResponseEntity<HashMap<String, String>>(mp1, null, HttpStatus.ACCEPTED);
-		}else {
-			
-			
-			Role rolei = roleRepository.findById(requestUser.getRoleId()).get();
-			Manager manager = managerRepository.findByEmpId(requestUser.getManagerEmpId());
-			Reviewer reviewer = reviewerRepository.findByEmpId(requestUser.getReviewerEmpId());
-			
-			User user=new User();
-			user.setEmail(requestUser.getEmail());
-			user.setRole(rolei);
-			user.setEmployeeId(requestUser.getEmployeeId());
-			user.setId(requestUser.getId());
-			user.setManager(manager);
-			user.setPassword(passwordEncoder.encode(requestUser.getPassword()));
-			user.setReviewer(reviewer);
-			user.setFirstName(requestUser.getFirstName());
-			user.setLastName(requestUser.getLastName());
-			userRepository.save(user);
-			
-			
-			HashMap mp1= new HashMap<String, Object>();
-			mp1.put("transactionStatus", "Success");
-			mp1.put("errorCode", "");
-			mp1.put("errorMsg", "");
-			mp1.put("transactionData", user);
-			return ResponseEntity.ok(mp1);
-		}
-		
+		User user = userService.createUser(requestUser);
+		return ResponseEntity.ok(user);
 	}
 	
+	@PreAuthorize("hasAnyRole({'ROLE_OFFBOARDING_REVIEWER','ROLE_OFFBOARDING_MANAGER'})")
 	@PostMapping("/manager_add")
 	public ResponseEntity<?> createManager(@RequestBody Manager manager){
-		managerRepository.save(manager);
+		managerService.createManager(manager);
 		return ResponseEntity.ok(manager);
 	}
 	
+	@PreAuthorize("hasAnyRole({'ROLE_OFFBOARDING_REVIEWER','ROLE_OFFBOARDING_MANAGER'})")
 	@PostMapping("/reviewer_add")
 	public ResponseEntity<?> createManager(@RequestBody Reviewer reviewer){
-		reviewerRepository.save(reviewer);
-		return ResponseEntity.ok(reviewer);
+		Reviewer reviewer1 = reviewerService.createReviewer(reviewer);
+		return ResponseEntity.ok(reviewer1);
 	}
 	
+	@PreAuthorize("hasAnyRole({'ROLE_OFFBOARDING_REVIEWER','ROLE_OFFBOARDING_MANAGER'})")
 	@PostMapping("/role_add")
 	public ResponseEntity<?> createRole(@RequestBody Role role){
 		roleRepository.save(role);
 		return ResponseEntity.ok(role);
 	}
 	
+	@PreAuthorize("hasAnyRole({'ROLE_OFFBOARDING_REVIEWER','ROLE_OFFBOARDING_MANAGER'})")
 	@GetMapping("/roles")
 	public List<Role> getRoles(){
 		return roleRepository.findAll();
 	}
 	
+	@PreAuthorize("hasAnyRole({'ROLE_OFfBOARDING_REVIEWER','ROLE_OFFBOARDING_MANAGER'})")
 	@GetMapping("/managers")
 	public List<Manager> getManagers(){
-		return managerRepository.findAll();
+		return managerService.getAllManager();
 	}
 	
+	@PreAuthorize("hasAnyRole({'ROLE_OFFBOARDING_REVIEWER','ROLE_OFFBOARDING_MANAGER'})")
 	@GetMapping("/reviewers")
 	public List<Reviewer> getReviewers(){
-		return reviewerRepository.findAll();
+		return reviewerService.getAllReviewers();
 	}
 	
+	@PreAuthorize("hasAnyRole({'ROLE_OFFBOARDING_REVIEWER','ROLE_OFFBOARDING_MANAGER'})")
 	@GetMapping("/users_get")
 	public List<User> getUsers(){
 		return userRepository.findAll();
